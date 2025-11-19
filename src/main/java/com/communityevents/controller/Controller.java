@@ -207,6 +207,43 @@ public class Controller {
         }
     }
 
+    // Delete Event
+    public void handleDeleteEvent(Context ctx) {
+        Integer userId = getUserIdFromSession(ctx);
+
+        if (userId == null || !authenticate.isLoggedIn(userId)) {
+            userInterface.displayError(ctx, "Authentication required. Please log in.", 401);
+            return;
+        }
+
+        try {
+            int eventId = Integer.parseInt(ctx.pathParam("id"));
+            Event event = database.getEventDetails(eventId);
+
+            if (event == null) {
+                userInterface.displayError(ctx, "Event not found", 404);
+                return;
+            }
+
+            // Verify user is the creator of the event
+            if (event.getCreatorId() != userId) {
+                userInterface.displayError(ctx, "You can only delete your own events", 403);
+                return;
+            }
+
+            boolean deleted = database.deleteEvent(eventId);
+            if (deleted) {
+                userInterface.displaySuccess(ctx, "Event deleted successfully");
+            } else {
+                userInterface.displayError(ctx, "Failed to delete event", 400);
+            }
+        } catch (NumberFormatException e) {
+            userInterface.displayError(ctx, "Invalid event ID", 400);
+        } catch (Exception e) {
+            userInterface.displayError(ctx, "Failed to delete event: " + e.getMessage(), 500);
+        }
+    }
+
     // Story 5: Login
     public void handleLogin(Context ctx) {
         try {

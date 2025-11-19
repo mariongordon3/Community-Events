@@ -16,6 +16,7 @@ export const searchEvents = (filters) => api.get('/events/search', { params: fil
 export const getEventDetails = (eventId) => api.get(`/events/${eventId}`);
 export const getEventComments = (eventId) => api.get(`/events/${eventId}/comments`);
 export const createEvent = (eventData) => api.post('/events', eventData);
+export const deleteEvent = (eventId) => api.delete(`/events/${eventId}`);
 
 // Comment APIs
 export const addComment = (eventId, text) => api.post(`/events/${eventId}/comments`, { text });

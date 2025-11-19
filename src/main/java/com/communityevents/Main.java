@@ -41,6 +41,9 @@ public class Main {
         // Story 4: Create Event (requires auth)
         app.post("/api/events", controller::handleEventCreation);
 
+        // Delete Event (requires auth, only creator can delete)
+        app.delete("/api/events/{id}", controller::handleDeleteEvent);
+
         // Story 3: Comment Actions (requires auth)
         app.post("/api/events/{eventId}/comments", controller::handleCommentAction);
         app.put("/api/comments/{id}", controller::handleCommentAction);

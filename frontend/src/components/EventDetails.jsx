@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { getEventDetails, getEventComments } from '../services/api';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { getEventDetails, getEventComments, deleteEvent } from '../services/api';
 import CommentSection from './CommentSection';
 
 function EventDetails({ user }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     loadEventDetails();
@@ -53,6 +55,25 @@ function EventDetails({ user }) {
     loadComments();
   };
 
+  const handleDeleteEvent = async () => {
+    if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      setError(null);
+      await deleteEvent(id);
+      // Redirect to home page after successful deletion
+      navigate('/');
+    } catch (err) {
+      const errorMessage = err.response?.data?.error || 'Failed to delete event';
+      setError(errorMessage);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return <div>Loading event details...</div>;
   }
@@ -70,9 +91,31 @@ function EventDetails({ user }) {
 
   return (
     <div>
-      <Link to="/">
-        <button>Back to Events</button>
-      </Link>
+      <div style={{ marginBottom: '10px' }}>
+        <Link to="/">
+          <button>Back to Events</button>
+        </Link>
+        {user && event && user.userId === event.creatorId && (
+          <button 
+            onClick={handleDeleteEvent} 
+            disabled={deleting}
+            style={{
+              marginLeft: '10px',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '8px 16px',
+              cursor: deleting ? 'not-allowed' : 'pointer',
+              opacity: deleting ? 0.6 : 1
+            }}
+          >
+            {deleting ? 'Deleting...' : 'Delete Event'}
+          </button>
+        )}
+      </div>
+
+      {error && <div className="error">{error}</div>}
       
       <div style={{ 
         border: '1px solid #ddd', 

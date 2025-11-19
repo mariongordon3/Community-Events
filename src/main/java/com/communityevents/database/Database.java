@@ -117,6 +117,14 @@ public class Database {
         return eventData;
     }
 
+    public boolean deleteEvent(int eventId) {
+        // Delete all comments associated with this event
+        comments.removeIf(c -> c.getEventId() == eventId);
+        
+        // Delete the event
+        return events.removeIf(e -> e.getId() == eventId);
+    }
+
     // Comment methods
     public List<Comment> getCommentsForEvent(int eventId) {
         return comments.stream()
