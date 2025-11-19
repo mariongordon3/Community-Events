@@ -41,6 +41,9 @@ public class Main {
         // Story 4: Create Event (requires auth)
         app.post("/api/events", controller::handleEventCreation);
 
+        // Update Event (requires auth, only creator can update)
+        app.put("/api/events/{id}", controller::handleUpdateEvent);
+
         // Delete Event (requires auth, only creator can delete)
         app.delete("/api/events/{id}", controller::handleDeleteEvent);
 

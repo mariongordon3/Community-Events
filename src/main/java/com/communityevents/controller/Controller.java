@@ -207,6 +207,71 @@ public class Controller {
         }
     }
 
+    // Update Event
+    public void handleUpdateEvent(Context ctx) {
+        Integer userId = getUserIdFromSession(ctx);
+
+        if (userId == null || !authenticate.isLoggedIn(userId)) {
+            userInterface.displayError(ctx, "Authentication required. Please log in.", 401);
+            return;
+        }
+
+        try {
+            int eventId = Integer.parseInt(ctx.pathParam("id"));
+            Event existingEvent = database.getEventDetails(eventId);
+
+            if (existingEvent == null) {
+                userInterface.displayError(ctx, "Event not found", 404);
+                return;
+            }
+
+            // Verify user is the creator of the event
+            if (existingEvent.getCreatorId() != userId) {
+                userInterface.displayError(ctx, "You can only edit your own events", 403);
+                return;
+            }
+
+            Event eventData = objectMapper.readValue(ctx.body(), Event.class);
+
+            // Validate required fields
+            if (eventData.getTitle() == null || eventData.getTitle().trim().isEmpty()) {
+                userInterface.displayError(ctx, "Event title is required", 400);
+                return;
+            }
+            if (eventData.getDate() == null || eventData.getDate().trim().isEmpty()) {
+                userInterface.displayError(ctx, "Event date is required", 400);
+                return;
+            }
+            if (eventData.getTime() == null || eventData.getTime().trim().isEmpty()) {
+                userInterface.displayError(ctx, "Event time is required", 400);
+                return;
+            }
+            if (eventData.getLocation() == null || eventData.getLocation().trim().isEmpty()) {
+                userInterface.displayError(ctx, "Event location is required", 400);
+                return;
+            }
+            if (eventData.getDescription() == null || eventData.getDescription().trim().isEmpty()) {
+                userInterface.displayError(ctx, "Event description is required", 400);
+                return;
+            }
+
+            // Preserve creatorId - it cannot be changed
+            eventData.setCreatorId(existingEvent.getCreatorId());
+            eventData.setId(eventId);
+
+            Event updatedEvent = database.updateEvent(eventId, eventData);
+            if (updatedEvent != null) {
+                userInterface.displayEventDetails(ctx, updatedEvent);
+            } else {
+                userInterface.displayError(ctx, "Failed to update event", 400);
+            }
+        } catch (NumberFormatException e) {
+            userInterface.displayError(ctx, "Invalid event ID", 400);
+        } catch (Exception e) {
+            userInterface.displayError(ctx, "Failed to update event: " + e.getMessage(), 400);
+        }
+    }
+
     // Delete Event
     public void handleDeleteEvent(Context ctx) {
         Integer userId = getUserIdFromSession(ctx);

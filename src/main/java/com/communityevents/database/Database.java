@@ -117,6 +117,30 @@ public class Database {
         return eventData;
     }
 
+    public Event updateEvent(int eventId, Event eventData) {
+        Event existingEvent = events.stream()
+                .filter(e -> e.getId() == eventId)
+                .findFirst()
+                .orElse(null);
+        
+        if (existingEvent == null) {
+            return null;
+        }
+        
+        // Update event fields (preserve ID and creatorId)
+        existingEvent.setTitle(eventData.getTitle());
+        existingEvent.setDescription(eventData.getDescription());
+        existingEvent.setDate(eventData.getDate());
+        existingEvent.setTime(eventData.getTime());
+        existingEvent.setLocation(eventData.getLocation());
+        existingEvent.setCategory(eventData.getCategory());
+        if (eventData.getOrganizer() != null && !eventData.getOrganizer().trim().isEmpty()) {
+            existingEvent.setOrganizer(eventData.getOrganizer());
+        }
+        
+        return existingEvent;
+    }
+
     public boolean deleteEvent(int eventId) {
         // Delete all comments associated with this event
         comments.removeIf(c -> c.getEventId() == eventId);

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createEvent } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { createEvent, updateEvent, getEventDetails } from '../services/api';
 
 function EventForm({ user }) {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEditMode = !!id;
   const [formData, setFormData] = useState({
     title: '',
     date: '',
@@ -14,8 +16,36 @@ function EventForm({ user }) {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loadingEvent, setLoadingEvent] = useState(isEditMode);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (isEditMode) {
+      loadEventData();
+    }
+  }, [id]);
+
+  const loadEventData = async () => {
+    try {
+      setLoadingEvent(true);
+      const response = await getEventDetails(id);
+      const event = response.data;
+      setFormData({
+        title: event.title || '',
+        date: event.date || '',
+        time: event.time || '',
+        location: event.location || '',
+        description: event.description || '',
+        category: event.category || ''
+      });
+    } catch (err) {
+      setError('Failed to load event data');
+      console.error(err);
+    } finally {
+      setLoadingEvent(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -66,15 +96,24 @@ function EventForm({ user }) {
       setError(null);
       setSuccess(false);
       
-      const response = await createEvent(formData);
-      setSuccess(true);
-      
-      // Redirect to event details after a short delay
-      setTimeout(() => {
-        navigate(`/events/${response.data.id}`);
-      }, 1500);
+      let response;
+      if (isEditMode) {
+        response = await updateEvent(id, formData);
+        setSuccess(true);
+        // Redirect to event details after a short delay
+        setTimeout(() => {
+          navigate(`/events/${id}`);
+        }, 1500);
+      } else {
+        response = await createEvent(formData);
+        setSuccess(true);
+        // Redirect to event details after a short delay
+        setTimeout(() => {
+          navigate(`/events/${response.data.id}`);
+        }, 1500);
+      }
     } catch (err) {
-      const errorMessage = err.response?.data?.error || 'Failed to create event';
+      const errorMessage = err.response?.data?.error || (isEditMode ? 'Failed to update event' : 'Failed to create event');
       setError(errorMessage);
       
       // If it's a field validation error, set it in errors
@@ -93,13 +132,17 @@ function EventForm({ user }) {
     }
   };
 
+  if (loadingEvent) {
+    return <div>Loading event data...</div>;
+  }
+
   return (
     <div>
-      <h1>Create New Event</h1>
+      <h1>{isEditMode ? 'Edit Event' : 'Create New Event'}</h1>
       
       {success && (
         <div className="success">
-          Event created successfully! Redirecting...
+          {isEditMode ? 'Event updated successfully! Redirecting...' : 'Event created successfully! Redirecting...'}
         </div>
       )}
       
@@ -189,9 +232,9 @@ function EventForm({ user }) {
 
         <div>
           <button type="submit" disabled={loading}>
-            {loading ? 'Creating...' : 'Save Event'}
+            {loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Event' : 'Save Event')}
           </button>
-          <button type="button" onClick={() => navigate('/')} disabled={loading}>
+          <button type="button" onClick={() => isEditMode ? navigate(`/events/${id}`) : navigate('/')} disabled={loading}>
             Cancel
           </button>
         </div>

@@ -69,6 +69,10 @@ function App() {
           <Route path="/search" element={<SearchFilters />} />
           <Route path="/events/:id" element={<EventDetails user={user} />} />
           <Route 
+            path="/events/:id/edit" 
+            element={user ? <EventForm user={user} /> : <Navigate to="/login" />} 
+          />
+          <Route 
             path="/create-event" 
             element={user ? <EventForm user={user} /> : <Navigate to="/login" />} 
           />

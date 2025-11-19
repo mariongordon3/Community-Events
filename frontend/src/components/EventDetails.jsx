@@ -96,22 +96,40 @@ function EventDetails({ user }) {
           <button>Back to Events</button>
         </Link>
         {user && event && user.userId === event.creatorId && (
-          <button 
-            onClick={handleDeleteEvent} 
-            disabled={deleting}
-            style={{
-              marginLeft: '10px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 16px',
-              cursor: deleting ? 'not-allowed' : 'pointer',
-              opacity: deleting ? 0.6 : 1
-            }}
-          >
-            {deleting ? 'Deleting...' : 'Delete Event'}
-          </button>
+          <>
+            <Link to={`/events/${id}/edit`}>
+              <button 
+                style={{
+                  marginLeft: '10px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '8px 16px',
+                  cursor: 'pointer',
+                  textDecoration: 'none'
+                }}
+              >
+                Edit Event
+              </button>
+            </Link>
+            <button 
+              onClick={handleDeleteEvent} 
+              disabled={deleting}
+              style={{
+                marginLeft: '10px',
+                backgroundColor: '#dc3545',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '8px 16px',
+                cursor: deleting ? 'not-allowed' : 'pointer',
+                opacity: deleting ? 0.6 : 1
+              }}
+            >
+              {deleting ? 'Deleting...' : 'Delete Event'}
+            </button>
+          </>
         )}
       </div>
 
