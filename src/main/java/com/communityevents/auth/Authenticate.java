@@ -53,5 +53,13 @@ public class Authenticate {
         }
         return null;
     }
+
+    public void markUserAsLoggedIn(int userId) {
+        loggedInUsers.put(userId, true);
+        User user = database.getUserById(userId);
+        if (user != null) {
+            user.setLoggedIn(true);
+        }
+    }
 }
 

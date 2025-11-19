@@ -249,6 +249,56 @@ public class Controller {
         userInterface.displaySuccess(ctx, "Logged out successfully");
     }
 
+    // User Registration
+    public void handleRegister(Context ctx) {
+        try {
+            Map<String, String> registrationData = objectMapper.readValue(ctx.body(), new TypeReference<Map<String, String>>() {});
+            String name = registrationData.get("name");
+            String email = registrationData.get("email");
+            String password = registrationData.get("password");
+
+            // Validate required fields
+            if (name == null || name.trim().isEmpty()) {
+                userInterface.displayError(ctx, "Name is required", 400);
+                return;
+            }
+            if (email == null || email.trim().isEmpty()) {
+                userInterface.displayError(ctx, "Email is required", 400);
+                return;
+            }
+            if (password == null || password.trim().isEmpty()) {
+                userInterface.displayError(ctx, "Password is required", 400);
+                return;
+            }
+
+            // Check if email already exists
+            if (database.getUser(email) != null) {
+                userInterface.displayError(ctx, "Email already exists. Please use a different email.", 400);
+                return;
+            }
+
+            // Create new user
+            User newUser = new User(0, name.trim(), email.trim(), password);
+            User savedUser = database.saveUser(newUser);
+
+            // Automatically log the user in
+            authenticate.markUserAsLoggedIn(savedUser.getUserId());
+            ctx.sessionAttribute("userId", savedUser.getUserId());
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("user", savedUser);
+            response.put("message", "Registration successful");
+            ctx.status(201);
+            ctx.json(response);
+        } catch (IllegalArgumentException e) {
+            // Email already exists error from database
+            userInterface.displayError(ctx, e.getMessage(), 400);
+        } catch (Exception e) {
+            userInterface.displayError(ctx, "Registration failed: " + e.getMessage(), 400);
+        }
+    }
+
     // Helper method to get userId from session
     private Integer getUserIdFromSession(Context ctx) {
         Object userIdObj = ctx.sessionAttribute("userId");

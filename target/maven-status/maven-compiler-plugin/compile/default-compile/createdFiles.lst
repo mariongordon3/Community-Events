@@ -5,6 +5,7 @@ com/communityevents/model/Event.class
 com/communityevents/database/Database.class
 com/communityevents/model/User.class
 com/communityevents/Main.class
+com/communityevents/controller/Controller$4.class
 com/communityevents/controller/Controller$3.class
 com/communityevents/auth/Authenticate.class
 com/communityevents/controller/Controller$2.class

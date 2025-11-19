@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { login, logout } from '../services/api';
+import { register } from '../services/api';
 
-function LoginForm({ onLogin }) {
+function RegisterForm({ onLogin }) {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -12,8 +13,8 @@ function LoginForm({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!email.trim() || !password.trim()) {
-      setError('Email and password are required');
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setError('Name, email, and password are required');
       return;
     }
 
@@ -21,29 +22,19 @@ function LoginForm({ onLogin }) {
       setLoading(true);
       setError(null);
       
-      const response = await login(email, password);
+      const response = await register(name, email, password);
       
       if (response.data.success && response.data.user) {
         onLogin(response.data.user);
         navigate('/');
       } else {
-        setError('Invalid credentials');
+        setError('Registration failed');
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.error || 'Invalid credentials';
+      const errorMessage = err.response?.data?.error || 'Registration failed';
       setError(errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      onLogin(null);
-      navigate('/');
-    } catch (err) {
-      console.error('Logout error:', err);
     }
   };
 
@@ -57,7 +48,7 @@ function LoginForm({ onLogin }) {
       border: '1px solid #ddd',
       boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
     }}>
-      <h1>Log In</h1>
+      <h1>Create Account</h1>
       
       {error && (
         <div className="error" style={{ 
@@ -73,6 +64,26 @@ function LoginForm({ onLogin }) {
       )}
 
       <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            Name:
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+            style={{ 
+              width: '100%', 
+              padding: '8px', 
+              border: '1px solid #ddd', 
+              borderRadius: '4px',
+              fontSize: '14px'
+            }}
+            required
+          />
+        </div>
+
         <div style={{ marginBottom: '15px' }}>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
             Email:
@@ -128,19 +139,16 @@ function LoginForm({ onLogin }) {
             opacity: loading ? 0.6 : 1
           }}
         >
-          {loading ? 'Logging in...' : 'Log In'}
+          {loading ? 'Creating Account...' : 'Create Account'}
         </button>
       </form>
 
       <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
-        <p>Don't have an account? <Link to="/register" style={{ color: '#007bff', textDecoration: 'none' }}>Register here</Link></p>
-        <p style={{ marginTop: '10px', fontSize: '12px' }}>
-          Test credentials: john@example.com / password123
-        </p>
+        <p>Already have an account? <Link to="/login" style={{ color: '#007bff', textDecoration: 'none' }}>Log in here</Link></p>
       </div>
     </div>
   );
 }
 
-export default LoginForm;
+export default RegisterForm;
 

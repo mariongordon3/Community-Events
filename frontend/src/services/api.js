@@ -24,6 +24,7 @@ export const deleteComment = (commentId) => api.delete(`/comments/${commentId}`)
 
 // Auth APIs
 export const login = (email, password) => api.post('/auth/login', { email, password });
+export const register = (name, email, password) => api.post('/auth/register', { name, email, password });
 export const logout = () => api.post('/auth/logout');
 export const getAuthStatus = () => api.get('/auth/status');
 

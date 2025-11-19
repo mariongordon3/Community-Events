@@ -48,6 +48,7 @@ public class Main {
 
         // Story 5: Authentication
         app.post("/api/auth/login", controller::handleLogin);
+        app.post("/api/auth/register", controller::handleRegister);
         app.post("/api/auth/logout", controller::handleLogout);
         app.get("/api/auth/status", controller::handleAuthStatus);
 

@@ -4,6 +4,7 @@ import EventList from './components/EventList';
 import EventDetails from './components/EventDetails';
 import EventForm from './components/EventForm';
 import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 import SearchFilters from './components/SearchFilters';
 import { getAuthStatus, logout } from './services/api';
 
@@ -74,6 +75,10 @@ function App() {
           <Route 
             path="/login" 
             element={user ? <Navigate to="/" /> : <LoginForm onLogin={handleLogin} />} 
+          />
+          <Route 
+            path="/register" 
+            element={user ? <Navigate to="/" /> : <RegisterForm onLogin={handleLogin} />} 
           />
         </Routes>
       </div>

@@ -164,5 +164,20 @@ public class Database {
     public List<User> getAllUsers() {
         return new ArrayList<>(users);
     }
+
+    public User saveUser(User user) {
+        // Check if email already exists
+        if (getUser(user.getEmail()) != null) {
+            throw new IllegalArgumentException("Email already exists: " + user.getEmail());
+        }
+        
+        // Set userId if not already set
+        if (user.getUserId() == 0) {
+            user.setUserId(nextUserId++);
+        }
+        
+        users.add(user);
+        return user;
+    }
 }
 
