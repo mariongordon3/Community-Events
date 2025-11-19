@@ -1,0 +1,11 @@
+com/communityevents/controller/Controller.class
+com/communityevents/controller/Controller$1.class
+com/communityevents/model/Comment.class
+com/communityevents/model/Event.class
+com/communityevents/database/Database.class
+com/communityevents/model/User.class
+com/communityevents/Main.class
+com/communityevents/controller/Controller$3.class
+com/communityevents/auth/Authenticate.class
+com/communityevents/controller/Controller$2.class
+com/communityevents/ui/UserInterface.class

@@ -1,0 +1,22 @@
+{
+  "name": "community-events-frontend",
+  "version": "1.0.0",
+  "description": "Community Events Frontend",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0",
+    "axios": "^1.5.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.1.1",
+    "vite": "^4.4.9"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
+
