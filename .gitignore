@@ -1,2 +1,17 @@
+# Maven
 target/
-node_modules/
+
+# Node - ignore node_modules anywhere
+**/node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
