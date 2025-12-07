@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getEvents } from '../services/api';
+import FlagBanner from './FlagBanner';
 
 function EventList() {
   const [events, setEvents] = useState([]);
@@ -35,6 +36,7 @@ function EventList() {
 
   return (
     <div>
+      <FlagBanner />
       <h1>Community Events</h1>
       {events.length === 0 ? (
         <div style={{ padding: '20px', textAlign: 'center' }}>
@@ -45,18 +47,13 @@ function EventList() {
           {events.map(event => (
             <div 
               key={event.id} 
-              style={{ 
-                border: '1px solid #ddd', 
-                borderRadius: '4px', 
-                padding: '15px', 
-                margin: '10px 0',
-                backgroundColor: '#fff'
-              }}
+              className="card"
             >
               <h2>{event.title}</h2>
               <p><strong>Date:</strong> {event.date} | <strong>Time:</strong> {event.time} | <strong>Location:</strong> {event.location}</p>
-              {event.description && <p>{event.description}</p>}
-              <Link to={`/events/${event.id}`}>
+              {event.category && <p><strong>Category:</strong> {event.category}</p>}
+              {event.description && <p style={{ marginTop: '10px' }}>{event.description}</p>}
+              <Link to={`/events/${event.id}`} style={{ textDecoration: 'none', display: 'inline-block', marginTop: '10px' }}>
                 <button>View Details</button>
               </Link>
             </div>

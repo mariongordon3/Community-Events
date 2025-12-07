@@ -91,41 +91,19 @@ function EventDetails({ user }) {
 
   return (
     <div>
-      <div style={{ marginBottom: '10px' }}>
-        <Link to="/">
-          <button>Back to Events</button>
+      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <button className="secondary">Back to Events</button>
         </Link>
         {user && event && user.userId === event.creatorId && (
           <>
-            <Link to={`/events/${id}/edit`}>
-              <button 
-                style={{
-                  marginLeft: '10px',
-                  backgroundColor: '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px 16px',
-                  cursor: 'pointer',
-                  textDecoration: 'none'
-                }}
-              >
-                Edit Event
-              </button>
+            <Link to={`/events/${id}/edit`} style={{ textDecoration: 'none' }}>
+              <button>Edit Event</button>
             </Link>
             <button 
               onClick={handleDeleteEvent} 
               disabled={deleting}
-              style={{
-                marginLeft: '10px',
-                backgroundColor: '#dc3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '8px 16px',
-                cursor: deleting ? 'not-allowed' : 'pointer',
-                opacity: deleting ? 0.6 : 1
-              }}
+              className="danger"
             >
               {deleting ? 'Deleting...' : 'Delete Event'}
             </button>
@@ -135,18 +113,19 @@ function EventDetails({ user }) {
 
       {error && <div className="error">{error}</div>}
       
-      <div style={{ 
-        border: '1px solid #ddd', 
-        borderRadius: '4px', 
-        padding: '20px', 
-        margin: '20px 0',
-        backgroundColor: '#fff'
-      }}>
+      <div className="card">
         <h1>{event.title}</h1>
-        <p><strong>Date:</strong> {event.date} | <strong>Time:</strong> {event.time} | <strong>Location:</strong> {event.location}</p>
-        {event.category && <p><strong>Category:</strong> {event.category}</p>}
-        {event.organizer && <p><strong>Organizer:</strong> {event.organizer}</p>}
-        {event.description && <p style={{ marginTop: '15px' }}>{event.description}</p>}
+        <div style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '2px solid #e9ecef' }}>
+          <p style={{ fontSize: '1.1em', marginBottom: '8px' }}>
+            <strong>Date:</strong> {event.date} | <strong>Time:</strong> {event.time}
+          </p>
+          <p style={{ fontSize: '1.1em', marginBottom: '8px' }}>
+            <strong>Location:</strong> {event.location}
+          </p>
+          {event.category && <p style={{ fontSize: '1.1em', marginBottom: '8px' }}><strong>Category:</strong> {event.category}</p>}
+          {event.organizer && <p style={{ fontSize: '1.1em' }}><strong>Organizer:</strong> {event.organizer}</p>}
+        </div>
+        {event.description && <p style={{ marginTop: '15px', fontSize: '1.05em', lineHeight: '1.8' }}>{event.description}</p>}
       </div>
 
       <CommentSection 

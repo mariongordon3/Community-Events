@@ -61,82 +61,81 @@ function SearchFilters() {
     <div>
       <h1>Filter Events</h1>
       
-      <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#fff', borderRadius: '4px' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Keyword: </label>
-          <input
-            type="text"
-            name="keyword"
-            value={filters.keyword}
-            onChange={handleChange}
-            placeholder="Search by name, category, or organizer"
-            style={{ width: '300px' }}
-          />
+      <div className="card" style={{ marginBottom: '30px' }}>
+        <h3 style={{ marginBottom: '20px' }}>Search Filters</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px', marginBottom: '20px' }}>
+          <div>
+            <label>Keyword</label>
+            <input
+              type="text"
+              name="keyword"
+              value={filters.keyword}
+              onChange={handleChange}
+              placeholder="Search by name, category, or organizer"
+            />
+          </div>
+          
+          <div>
+            <label>Category</label>
+            <select name="category" value={filters.category} onChange={handleChange}>
+              <option value="">All Categories</option>
+              <option value="Community">Community</option>
+              <option value="Market">Market</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Art">Art</option>
+            </select>
+          </div>
+          
+          <div>
+            <label>Date</label>
+            <input
+              type="date"
+              name="date"
+              value={filters.date}
+              onChange={handleChange}
+            />
+          </div>
+          
+          <div>
+            <label>Location</label>
+            <input
+              type="text"
+              name="location"
+              value={filters.location}
+              onChange={handleChange}
+              placeholder="Search by location"
+            />
+          </div>
         </div>
         
-        <div style={{ marginBottom: '10px' }}>
-          <label>Category: </label>
-          <select name="category" value={filters.category} onChange={handleChange}>
-            <option value="">All Categories</option>
-            <option value="Community">Community</option>
-            <option value="Market">Market</option>
-            <option value="Fitness">Fitness</option>
-            <option value="Art">Art</option>
-          </select>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={handleSearch} disabled={loading}>
+            {loading ? 'Searching...' : 'Apply Filter'}
+          </button>
+          <button onClick={handleClear} className="secondary">Clear Filter</button>
         </div>
-        
-        <div style={{ marginBottom: '10px' }}>
-          <label>Date: </label>
-          <input
-            type="date"
-            name="date"
-            value={filters.date}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div style={{ marginBottom: '10px' }}>
-          <label>Location: </label>
-          <input
-            type="text"
-            name="location"
-            value={filters.location}
-            onChange={handleChange}
-            placeholder="Search by location"
-          />
-        </div>
-        
-        <button onClick={handleSearch} disabled={loading}>
-          {loading ? 'Searching...' : 'Apply Filter'}
-        </button>
-        <button onClick={handleClear}>Clear Filter</button>
       </div>
 
       {error && <div className="error">{error}</div>}
 
       <div>
-        <h2>Filtered Event List:</h2>
+        <h2>Search Results</h2>
         {events.length === 0 ? (
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            <p>No events found.</p>
+          <div className="card" style={{ padding: '40px', textAlign: 'center' }}>
+            <p style={{ color: '#666', fontSize: '1.1em' }}>No events found. Try adjusting your filters.</p>
           </div>
         ) : (
           <div>
             {events.map(event => (
               <div 
                 key={event.id} 
-                style={{ 
-                  border: '1px solid #ddd', 
-                  borderRadius: '4px', 
-                  padding: '15px', 
-                  margin: '10px 0',
-                  backgroundColor: '#fff'
-                }}
+                className="card"
               >
                 <h3>{event.title}</h3>
                 <p><strong>Date:</strong> {event.date} | <strong>Time:</strong> {event.time} | <strong>Location:</strong> {event.location}</p>
-                {event.description && <p>{event.description}</p>}
-                <Link to={`/events/${event.id}`}>
+                {event.category && <p><strong>Category:</strong> {event.category}</p>}
+                {event.description && <p style={{ marginTop: '10px' }}>{event.description}</p>}
+                <Link to={`/events/${event.id}`} style={{ textDecoration: 'none', display: 'inline-block', marginTop: '10px' }}>
                   <button>View Details</button>
                 </Link>
               </div>

@@ -148,68 +148,58 @@ function EventForm({ user }) {
       
       {error && <div className="error">{error}</div>}
 
-      <form onSubmit={handleSubmit} style={{ 
-        maxWidth: '600px', 
-        padding: '20px', 
-        backgroundColor: '#fff', 
-        borderRadius: '4px',
-        border: '1px solid #ddd'
-      }}>
-        <div style={{ marginBottom: '15px' }}>
+      <form onSubmit={handleSubmit} className="card" style={{ maxWidth: '700px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <label>Event Title: *</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            style={{ width: '100%' }}
           />
-          {errors.title && <div className="error" style={{ marginTop: '5px', fontSize: '12px' }}>{errors.title}</div>}
+          {errors.title && <div className="error" style={{ marginTop: '5px', fontSize: '13px', padding: '8px' }}>{errors.title}</div>}
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <label>Date: *</label>
           <input
             type="date"
             name="date"
             value={formData.date}
             onChange={handleChange}
-            style={{ width: '100%' }}
           />
-          {errors.date && <div className="error" style={{ marginTop: '5px', fontSize: '12px' }}>{errors.date}</div>}
+          {errors.date && <div className="error" style={{ marginTop: '5px', fontSize: '13px', padding: '8px' }}>{errors.date}</div>}
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <label>Time: *</label>
           <input
             type="time"
             name="time"
             value={formData.time}
             onChange={handleChange}
-            style={{ width: '100%' }}
           />
-          {errors.time && <div className="error" style={{ marginTop: '5px', fontSize: '12px' }}>{errors.time}</div>}
+          {errors.time && <div className="error" style={{ marginTop: '5px', fontSize: '13px', padding: '8px' }}>{errors.time}</div>}
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <label>Location: *</label>
           <input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleChange}
-            style={{ width: '100%' }}
+            placeholder="Enter event location"
           />
-          {errors.location && <div className="error" style={{ marginTop: '5px', fontSize: '12px' }}>{errors.location}</div>}
+          {errors.location && <div className="error" style={{ marginTop: '5px', fontSize: '13px', padding: '8px' }}>{errors.location}</div>}
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <label>Category:</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
-            style={{ width: '100%' }}
           >
             <option value="">Select Category</option>
             <option value="Community">Community</option>
@@ -219,22 +209,28 @@ function EventForm({ user }) {
           </select>
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div style={{ marginBottom: '25px' }}>
           <label>Description: *</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            style={{ width: '100%', minHeight: '100px' }}
+            style={{ minHeight: '120px', resize: 'vertical' }}
+            placeholder="Enter event description..."
           />
-          {errors.description && <div className="error" style={{ marginTop: '5px', fontSize: '12px' }}>{errors.description}</div>}
+          {errors.description && <div className="error" style={{ marginTop: '5px', fontSize: '13px', padding: '8px' }}>{errors.description}</div>}
         </div>
 
-        <div>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
           <button type="submit" disabled={loading}>
             {loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Event' : 'Save Event')}
           </button>
-          <button type="button" onClick={() => isEditMode ? navigate(`/events/${id}`) : navigate('/')} disabled={loading}>
+          <button 
+            type="button" 
+            onClick={() => isEditMode ? navigate(`/events/${id}`) : navigate('/')} 
+            disabled={loading}
+            className="secondary"
+          >
             Cancel
           </button>
         </div>

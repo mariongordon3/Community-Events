@@ -50,18 +50,22 @@ function App() {
   return (
     <Router>
       <div className="container">
-        <nav style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#fff', borderRadius: '4px' }}>
-          <Link to="/" style={{ marginRight: '20px', textDecoration: 'none', color: '#007bff' }}>Home</Link>
-          <Link to="/search" style={{ marginRight: '20px', textDecoration: 'none', color: '#007bff' }}>Search</Link>
-          {user ? (
-            <>
-              <Link to="/create-event" style={{ marginRight: '20px', textDecoration: 'none', color: '#007bff' }}>Create Event</Link>
-              <span style={{ marginRight: '20px' }}>Welcome, {user.name}!</span>
-              <Link to="/login" onClick={handleLogout} style={{ textDecoration: 'none', color: '#007bff' }}>Log Out</Link>
-            </>
-          ) : (
-            <Link to="/login" style={{ textDecoration: 'none', color: '#007bff' }}>Log In</Link>
-          )}
+        <nav>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+            <Link to="/">Home</Link>
+            <Link to="/search">Search</Link>
+            {user && <Link to="/create-event">Create Event</Link>}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            {user ? (
+              <>
+                <span>Welcome, {user.name}!</span>
+                <Link to="/login" onClick={handleLogout}>Log Out</Link>
+              </>
+            ) : (
+              <Link to="/login">Log In</Link>
+            )}
+          </div>
         </nav>
 
         <Routes>
