@@ -1,12 +1,23 @@
 package com.communityevents;
 
 import com.communityevents.controller.Controller;
+import com.communityevents.database.Database;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
+        // Initialize database connection and schema
+        try {
+            Database.getInstance();
+            System.out.println("Database initialized successfully");
+        } catch (Exception e) {
+            System.err.println("Failed to initialize database: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
+        
         Controller controller = Controller.getInstance();
         
         Javalin app = Javalin.create(config -> {

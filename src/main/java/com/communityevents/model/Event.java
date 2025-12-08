@@ -1,8 +1,6 @@
 package com.communityevents.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Event {
     @JsonProperty("id")
